@@ -6,7 +6,9 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import time
 
+# 페이지 설정 (한 번만 호출)
 st.set_page_config(
     page_title="레이아웃 배우기",
     page_icon="🎨",
@@ -22,12 +24,12 @@ st.sidebar.title("⚙️ 설정 패널")
 st.sidebar.write("사이드바는 설정이나 필터를 배치하기 좋습니다.")
 
 sidebar_option = st.sidebar.selectbox(
-    "옵션 선택:",
-    ["옵션 1", "옵션 2", "옵션 3"]
+    "",
+    ["카테고리 선택 1", "카테고리 선택 2", "카테고리 선택 3"]
 )
 
 sidebar_slider = st.sidebar.slider(
-    "값 조정:",
+    "가격 조정:",
     0, 100, 50
 )
 
@@ -46,20 +48,57 @@ st.header("1. 컬럼 레이아웃")
 st.subheader("2개 컬럼 (1:1 비율)")
 col1, col2 = st.columns(2)
 
+st.subheader("2개 컬럼 (1:1 비율)")
+col1, col2 = st.columns(2)
+
 with col1:
-    st.write("**왼쪽 컬럼**")
-    st.button("버튼 1", use_container_width=True)
+    # 왼쪽: 이미지
+    st.image(
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ96jQ9W4bT93OXaPYPMiX3hSW3ioFRp-2mCA&s",
+        use_container_width=True
+    )
 
 with col2:
-    st.write("**오른쪽 컬럼**")
-    st.button("버튼 2", use_container_width=True)
+    # 오른쪽: 상품 정보
+    st.write("### 🎧 무선 헤드폰 Pro")
+    st.write("**₩299,000**")
+    st.write("⭐⭐⭐⭐⭐ (4.8) - 리뷰 324개")
+    st.write("---")
+    st.write("고급 노이즈 캔슬링 기능이 탑재된 프리미엄 무선 헤드폰입니다.")
+    
+    quantity = st.number_input("수량", min_value=1, value=1, key="simple_quantity")
+    btn_col1, btn_col2 = st.columns(2)
+    with btn_col1:
+        st.button("🛒 장바구니", use_container_width=True, key="simple_cart")
+    with btn_col2:
+        st.button("💳 바로 구매", type="primary", use_container_width=True, key="simple_buy")
 
+
+# ============================================
+# 2-1. 3개 컬럼 + 버튼 예제
+# ============================================
+st.subheader("3개 컬럼 (1:1:1 비율) - 버튼 예제")
+
+# 3개의 컬럼 생성 (첫 번째 세트)
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.write("**왼쪽 컬럼**")
+    st.button(":rabbit: 1", use_container_width=True, key="rabbit1_row1")
+
+with col2:
+    st.write("**가운데 컬럼**")
+    st.button(":rabbit: 2", use_container_width=True, key="rabbit2_row1")
+
+with col3:
+    st.write("**오른쪽 컬럼**")
+    st.button(":rabbit: 3", use_container_width=True, key="rabbit3_row1")
 
 # 구분선
 st.divider()
 
-st.subheader("3개 컬럼 (1:2:1 비율)")
-col1, col2, col3 = st.columns([1, 2, 1])
+st.subheader("3개 컬럼 (1:3:1 비율)")
+col1, col2, col3 = st.columns([1, 3, 1])
 
 with col1:
     st.metric("사용자", "1,234", "+12%")
@@ -77,40 +116,77 @@ with col3:
 st.divider()
 st.header("2. 탭 레이아웃")
 
-tab1, tab2  = st.tabs(["⚙️ 설정", "ℹ️ 정보"])
+# 3개의 컬럼 생성 (두 번째 세트)
+st.subheader("다시 3개 컬럼 + 버튼 (탭 위쪽)")
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.write("**왼쪽 컬럼**")
+    st.button(":rabbit: 1", use_container_width=True, key="rabbit1_row2")
+
+with col2:
+    st.write("**가운데 컬럼**")
+    st.button(":rabbit: 2", use_container_width=True, key="rabbit2_row2")
+
+with col3:
+    st.write("**오른쪽 컬럼**")
+    st.button(":rabbit: 3", use_container_width=True, key="rabbit3_row2")
+
+st.title("탭 & 버튼 중복 테스트")
+
+tab1, tab2, tab3 = st.tabs(["⚙️ 상세설명", "ℹ️ 리뷰", "✨배송정보"])
 
 with tab1:
     st.subheader("설정 탭")
-    
-    theme = st.selectbox("테마:", ["라이트", "다크"])
-    language = st.selectbox("언어:", ["한국어", "English"])
-    
-    if st.button("설정 저장"):
+
+    theme = st.selectbox(
+        "테마:",
+        ["라이트", "다크"],
+        key="theme_select"
+    )
+    language = st.selectbox(
+        "언어:",
+        ["한국어", "English"],
+        key="language_select"
+    )
+
+    if st.button("설정 저장", key="save_settings_btn_tab1"):
         st.success("설정이 저장되었습니다!")
 
 with tab2:
     st.subheader("정보 탭")
-    st.info("""
-    **버전**: 1.0.0  
-    **개발자**: Streamlit Team  
-    **라이선스**: MIT
-    """)
+    st.info(
+        """
+        **버전**: 1.0.0  
+        **개발자**: Streamlit Team  
+        **라이선스**: MIT
+        """
+    )
+
+with tab3:
+    st.subheader("햄토리 탭")
+    st.write("여기에 원하는 내용을 넣어 보세요 🐹✨")
+    if st.button("설정 저장", key="save_settings_btn_tab3"):
+        st.success("햄토리 탭 설정 저장!")
 
 # ============================================
 # 4. 확장 가능한 섹션 (Expander)
 # ============================================
 st.divider()
-st.header("3. 확장 섹션 (Expander)")
+st.header("3. FAQ")
 
 with st.expander("📖 더 자세히 보기"):
     st.write("""
     여기는 기본적으로 숨겨져 있는 내용입니다.
     클릭하면 펼쳐집니다!
     """)
-    st.code("""
-    def hello():
-        return "Hello, World!"
-    """, language="python")
+    st.code(
+        """
+def hello():
+    return "Hello, World!"
+        """,
+        language="python"
+    )
 
 with st.expander("📊 통계 데이터", expanded=True):
     st.write("expanded=True로 설정하면 기본으로 펼쳐져 있습니다.")
@@ -126,14 +202,12 @@ with st.expander("📊 통계 데이터", expanded=True):
 st.divider()
 st.header("5. Empty (동적 업데이트)")
 
-import time
-
 placeholder = st.empty()
 
-if st.button("카운트다운 시작"):
+if st.button("카운트다운 시작", key="countdown_btn"):
     for i in range(5, 0, -1):
         placeholder.write(f"⏰ {i}초 남았습니다...")
-        time.sleep(1) # 1초 기다리기
+        time.sleep(1)  # 1초 기다리기
     placeholder.success("✅ 완료!")
 
 # ============================================
@@ -163,7 +237,10 @@ with st.expander("💡 과제 1 예시 답안"):
     col1, col2 = st.columns(2)
     
     with col1:
-        st.image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ96jQ9W4bT93OXaPYPMiX3hSW3ioFRp-2mCA&s", use_container_width=True)
+        st.image(
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ96jQ9W4bT93OXaPYPMiX3hSW3ioFRp-2mCA&s",
+            use_container_width=True
+        )
     
     with col2:
         st.write("### 🎧 무선 헤드폰 Pro")
@@ -172,10 +249,10 @@ with st.expander("💡 과제 1 예시 답안"):
         st.write("---")
         st.write("고급 노이즈 캔슬링 기능이 탑재된 프리미엄 무선 헤드폰")
         
-        quantity = st.number_input("수량:", min_value=1, value=1)
+        quantity = st.number_input("수량:", min_value=1, value=1, key="product_quantity")
         col_a, col_b = st.columns(2)
-        col_a.button("🛒 장바구니", use_container_width=True)
-        col_b.button("💳 바로 구매", type="primary", use_container_width=True)
+        col_a.button("🛒 장바구니", use_container_width=True, key="cart_btn")
+        col_b.button("💳 바로 구매", type="primary", use_container_width=True, key="buy_now_btn")
     
     # 탭
     tab1, tab2, tab3 = st.tabs(["📋 상세설명", "⭐ 리뷰", "🚚 배송정보"])
@@ -194,7 +271,7 @@ with st.expander("💡 과제 1 예시 답안"):
     
     with tab3:
         st.info("무료 배송 (2-3일 소요)")
-    
+
     # FAQ
     with st.expander("❓ 자주 묻는 질문"):
         st.write("**Q: 배송은 얼마나 걸리나요?**")
@@ -223,9 +300,9 @@ with st.expander("💡 과제 2 예시 답안"):
     
     with right:
         st.write("**필터**")
-        period = st.selectbox("기간:", ["오늘", "7일", "30일", "90일"])
-        source = st.multiselect("소스:", ["검색", "SNS", "직접", "광고"])
-        st.button("적용", type="primary", use_container_width=True)
+        period = st.selectbox("기간:", ["오늘", "7일", "30일", "90일"], key="period_select")
+        source = st.multiselect("소스:", ["검색", "SNS", "직접", "광고"], key="source_multiselect")
+        st.button("적용", type="primary", use_container_width=True, key="apply_filter_btn")
     
     # 하단 탭
     t1, t2, t3 = st.tabs(["📊 데이터", "📈 통계", "⚙️ 설정"])
@@ -244,5 +321,5 @@ with st.expander("💡 과제 2 예시 답안"):
     
     with t3:
         st.write("대시보드 설정")
-        st.checkbox("자동 새로고침")
-        st.selectbox("새로고침 간격:", ["1분", "5분", "10분"])
+        st.checkbox("자동 새로고침", key="auto_refresh_chk")
+        st.selectbox("새로고침 간격:", ["1분", "5분", "10분"], key="refresh_interval")
